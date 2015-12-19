@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head lang="ru">
+    {% load static %}
+    {% load bootstrap3 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <!---->
+    {% block scripts %} {% endblock %}
+    {% block page_styles%} {%endblock%}
+</head>
+<body>
+{% block header %}
+    <header>
+        {% include "headers/header.html" %}
+    </header>
+{% endblock %}
+<section id="about">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <div class="text-center">
+{% block content %}
+{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% block footer%}
+{% endblock %}
+</body>
+</html>
