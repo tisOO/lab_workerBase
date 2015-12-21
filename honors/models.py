@@ -2,7 +2,10 @@
 
 from django.db import models
 
-from workers.models import Worker
+try:
+    from workers.models import Worker
+except ImportError:
+    pass
 
 
 class Salary(models.Model):
@@ -41,7 +44,6 @@ class Achievement(models.Model):
     achievement_type = models.CharField(choices=ACHIEVEMENT_TYPE, max_length=32)
     allowance = models.IntegerField(verbose_name="Надбавка (может быть отрицательной)")
     date = models.DateField(verbose_name="Дата награждения/взыскания")
-
 
 class AchievementReadOnlyProxy(Achievement):
     class Meta:

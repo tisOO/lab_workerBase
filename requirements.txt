@@ -1,3 +1,4 @@
 django==1.9
-MySQL-python
+mysqlclient
 django-bootstrap3
+Pillow

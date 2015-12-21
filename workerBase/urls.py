@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+import workerBase.settings
 
 urlpatterns = [
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': workerBase.settings.MEDIA_ROOT}),
     url(r'^admin/', include(admin.site.urls)),
     url(r'', include('login.urls')),
     url(r'', include('workers.urls')),

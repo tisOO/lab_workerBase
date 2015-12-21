@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 
-from workers.models import Worker
+try:
+    from workers.models import Worker
+except ImportError:
+    pass
 
 
 class WorkerSecondaryEducation(models.Model):
