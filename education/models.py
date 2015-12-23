@@ -27,6 +27,15 @@ class WorkerSecondaryEducation(models.Model):
         verbose_name_plural = 'Средние общеобразовательные учебные заведения'
 
 
+class WorkerSecondaryEducationProxy(WorkerSecondaryEducation):
+
+    class Meta:
+        proxy = True
+        verbose_name = "Среднее общеобразовательное учебное заведение (только чтение)"
+        verbose_name_plural = 'Средние общеобразовательные учебные заведения (только чтение)'
+
+
+
 class WorkerHighEducation(models.Model):
 
     worker = models.ForeignKey(Worker)
@@ -48,3 +57,11 @@ class WorkerHighEducation(models.Model):
     class Meta:
         verbose_name = "Высшее (среднее специальное) учебное заведение"
         verbose_name_plural = 'Высшие (средние специальные) учебные заведения'
+
+
+class WorkerHighEducationProxy(WorkerHighEducation):
+
+    class Meta:
+        proxy = True
+        verbose_name = "Высшее (среднее специальное) учебное заведение  (только чтение)"
+        verbose_name_plural = 'Высшие (средние специальные) учебные заведения (только чтение)'

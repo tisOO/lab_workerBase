@@ -233,6 +233,14 @@ class WorkerHRProxy(Worker):
         verbose_name = "Работник (Отдел кадров)"
         verbose_name_plural = 'Работники (Отдел Кадров)'
 
+
+class WorkerAccountingProxy(Worker):
+    class Meta:
+        proxy = True
+        verbose_name = "Работник (Бухгалтерия)"
+        verbose_name_plural = 'Работники (Бухгалтерия)'
+
+
 class WorkerLocation(models.Model):
 
     worker = models.ForeignKey(Worker)
@@ -261,6 +269,12 @@ class WorkerChild(models.Model):
     age.allow_tags = True
     age.short_description = "Возраст"
 
+
+class WorkerChildProxy(WorkerChild):
+    class Meta:
+        proxy = True
+        verbose_name = "Ребенок работника (только чтение)"
+        verbose_name_plural = 'Дети работников (только чтение)'
 
 class JobPosition(models.Model):
 

@@ -70,7 +70,7 @@ class WorkerHRProxyAdmin(admin.ModelAdmin):
                     )
     search_fields = ('last_name', 'first_name', 'patronymic')
     fieldsets = (
-        (None, {'fields': ('get_avatar_as_html', 'avatar', 'username', 'password')}),
+        (None, {'fields': ('get_avatar_as_html', )}),
     (_('Personal info'), {'fields': (
         'last_name', 'first_name', 'patronymic', 'sex', 'birthday', 'birth_place', 'email', 'marital_status',
     )}),
