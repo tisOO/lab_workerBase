@@ -3,9 +3,9 @@ from django.contrib.auth.forms import (UserCreationForm, UserChangeForm,
     AdminPasswordChangeForm)
 from django.utils.translation import ugettext_lazy as _
 # Register your models here.
-from .models import Worker, WorkerChild, JobPosition, WorkerLocation
+from .models import WorkerCEOProxy, WorkerChildProxy, JobPosition, WorkerLocationProxy
 from honors.models import Salary, Prize, Achievement
-from education.models import WorkerHighEducation, WorkerSecondaryEducation
+from education.models import WorkerHighEducationProxy, WorkerSecondaryEducationProxy
 
 from django.contrib.admin.options import InlineModelAdmin, TabularInline
 
@@ -50,35 +50,45 @@ class AchievementInline(LinkedInline):
 
 
 class ChildrenInline(LinkedInline):
-    model = WorkerChild
+    model = WorkerChildProxy
     verbose_name = "Ребенок"
     verbose_name_plural = "Список детей"
     extra = 0
+    readonly_fields = ('worker', 'name', 'sex', 'birthday')
+    template = 'admin/worker/inline_without_add.html'
 
 
 class LocationInline(TabularInline):
-    template = 'admin/worker/location_inline.html'
-    model = WorkerLocation
+    template = 'admin/worker/inline_without_add.html'
+    model = WorkerLocationProxy
     verbose_name = "Место жительства"
     verbose_name_plural = "Место жительства"
     extra = 0
+    readonly_fields = ('worker', 'city', 'street', 'house', 'flat')
+    can_delete = False
 
 
 class SecondaryEducationInline(LinkedInline):
-    model = WorkerSecondaryEducation
+    model = WorkerSecondaryEducationProxy
     verbose_name = "Среднее общеобразовательное учебное заведение"
     verbose_name_plural = "Учебные заведения"
     extra = 0
+    readonly_fields = ('worker', 'name', 'city', 'from_date', 'to_date', 'graduation_year')
+    can_delete = False
+    template = 'admin/worker/inline_without_add.html'
 
 
 class HighEducationInline(LinkedInline):
-    model = WorkerHighEducation
+    model = WorkerHighEducationProxy
     verbose_name = "Высшее/средне специальное учебное заведение"
     verbose_name_plural = "Высшие/среднеспециальные учебные заведения"
     extra = 0
+    readonly_fields = ('worker', 'name', 'city', 'specialization', 'from_date', 'to_date', 'graduation_year', 'education_type')
+    can_delete = False
+    template = 'admin/worker/inline_without_add.html'
 
 
-class WorkerAdmin(admin.ModelAdmin):
+class WorkerCEOProxyAdmin(admin.ModelAdmin):
 
     change_password_form = AdminPasswordChangeForm
     list_per_page = 10
@@ -88,43 +98,22 @@ class WorkerAdmin(admin.ModelAdmin):
                     'get_current_job', 'get_current_white_salary', 'get_current_tax', 'salary_by_current_year'
                     )
     fieldsets = (
-        (None, {'fields': ('get_avatar_as_html', 'avatar', 'username', 'password')}),
+        (None, {'fields': ('get_avatar_as_html', )}),
     (_('Personal info'), {'fields': (
         'last_name', 'first_name', 'patronymic', 'sex', 'birthday', 'birth_place', 'email', 'marital_status',
     )}),
-    (_('Permissions'), {'fields': ('is_active', 'is_staff', 'user_type')}),
-        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
-        (_('Groups'), {'fields': ('groups',)}),
     )
 
     search_fields = ('last_name', 'first_name', 'patronymic')
 
-    readonly_fields = ('get_avatar_as_html', )
+    readonly_fields = (
+        'get_avatar_as_html', 'last_name', 'first_name', 'patronymic', 'sex', 'birthday',
+        'birth_place', 'email', 'marital_status',
+        'is_active', 'is_staff', 'user_type'
+
+    )
 
     inlines = [
         ChildrenInline, JobPositionsInline, LocationInline,
         SecondaryEducationInline, HighEducationInline, SalaryInline, PrizeInline, AchievementInline,
     ]
-
-admin.site.register(Worker, WorkerAdmin)
-admin.site.register(WorkerChild, admin.ModelAdmin)
-
-class JobPositionAdmin(admin.ModelAdmin):
-    list_display = ('worker', 'organization', 'department', 'position',
-                    'current_position', 'from_date', 'to_date')
-
-admin.site.register(JobPosition, JobPositionAdmin)
-#
-from .admin_admin import WorkerAdminProxy, WorkerAdminProxyAdmin
-#
-admin.site.register(WorkerAdminProxy, WorkerAdminProxyAdmin)
-
-from .admin_hr import WorkerHRProxy, WorkerHRProxyAdmin
-admin.site.register(WorkerHRProxy, WorkerHRProxyAdmin)
-
-from .admin_accounting import WorkerAccountingProxy, WorkerAccountingProxyAdmin
-admin.site.register(WorkerAccountingProxy, WorkerAccountingProxyAdmin)
-
-from .admin_ceo import WorkerCEOProxyAdmin, WorkerCEOProxy
-
-admin.site.register(WorkerCEOProxy, WorkerCEOProxyAdmin)

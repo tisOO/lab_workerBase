@@ -241,6 +241,12 @@ class WorkerAccountingProxy(Worker):
         verbose_name_plural = 'Работники (Бухгалтерия)'
 
 
+class WorkerCEOProxy(Worker):
+    class Meta:
+        proxy = True
+        verbose_name = "Работник (CEO)"
+        verbose_name_plural = 'Работники (CEO)'
+
 class WorkerLocation(models.Model):
 
     worker = models.ForeignKey(Worker)
@@ -248,6 +254,17 @@ class WorkerLocation(models.Model):
     street = models.CharField(max_length=256)
     house = models.CharField(max_length=32)
     flat = models.PositiveIntegerField()
+
+    class Meta:
+        verbose_name = "Место жительства работника"
+        verbose_name_plural = 'Место жительства работников'
+
+
+class WorkerLocationProxy(WorkerLocation):
+    class Meta:
+        proxy = True
+        verbose_name = "Место жительства работника (только чтение)"
+        verbose_name_plural = 'Место жительства работников (только чтение)'
 
 
 class WorkerChild(models.Model):

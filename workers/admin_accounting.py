@@ -3,7 +3,7 @@ from django.contrib.auth.forms import (UserCreationForm, UserChangeForm,
     AdminPasswordChangeForm)
 from django.utils.translation import ugettext_lazy as _
 # Register your models here.
-from .models import WorkerAccountingProxy, WorkerChildProxy, JobPositionReadOnlyProxy, WorkerLocation
+from .models import WorkerAccountingProxy, WorkerChildProxy, JobPositionReadOnlyProxy, WorkerLocationProxy
 from honors.models import Salary, PrizeReadOnlyProxy, AchievementReadOnlyProxy
 from education.models import WorkerHighEducationProxy, WorkerSecondaryEducationProxy
 
@@ -70,7 +70,7 @@ class ChildrenInline(LinkedInline):
 
 class LocationInline(TabularInline):
     template = 'admin/worker/inline_without_add.html'
-    model = WorkerLocation
+    model = WorkerLocationProxy
     verbose_name = "Место жительства"
     verbose_name_plural = "Место жительства"
     extra = 0
