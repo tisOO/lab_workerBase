@@ -197,8 +197,7 @@ def generate_people(count=1000):
         j_position.organization = "Random Ltd"
         departments = Department.objects.filter()
         j_position.department = random.choice(departments)
-        j_position.position_id = random.choice(DepartmentJobPosition.objects.filter(department=j_position.department))
-        j_position.position = random.choice(j_pos)
+        j_position.current_position = random.choice(DepartmentJobPosition.objects.filter(department=j_position.department))
         year = random.randint(year+1, 2014)
         month = random.randint(1, 12)
         day = random.randint(1, 28)

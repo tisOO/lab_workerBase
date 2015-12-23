@@ -22,10 +22,10 @@ class AchievementReadOnlyProxyAdmin(admin.ModelAdmin):
 
 admin.site.register(AchievementReadOnlyProxy, AchievementReadOnlyProxyAdmin)
 
-
 class PrizeReadOnlyProxyAdmin(admin.ModelAdmin):
     list_display = ['worker', 'prize']
     readonly_fields = ['worker', 'prize']
+    fields = ['worker', 'prize',]
 
 admin.site.register(PrizeReadOnlyProxy, PrizeReadOnlyProxyAdmin)
 

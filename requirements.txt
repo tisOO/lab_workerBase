@@ -2,3 +2,4 @@ django==1.9
 mysqlclient
 django-bootstrap3
 Pillow
+django-debug-toolbar

@@ -7,5 +7,5 @@ from .views import ViewWorkers
 from security.utils import anonymous_required
 
 urlpatterns = patterns('',
-    url(r'^workers/$', ViewWorkers.as_view())
+    # url(r'^workers/$', ViewWorkers.as_view())
 )
