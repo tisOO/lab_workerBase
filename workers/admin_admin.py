@@ -34,6 +34,7 @@ class SalaryInline(LinkedInline):
     verbose_name_plural = "Зарплаты за разные периоды времени"
     extra = 0
     template = 'admin/worker/inline_without_add.html'
+    can_delete = False
 
 
 class PrizeInline(LinkedInline):
@@ -43,6 +44,7 @@ class PrizeInline(LinkedInline):
     verbose_name_plural = "Премии за разные периоды времени"
     extra = 0
     template = 'admin/worker/inline_without_add.html'
+    can_delete = False
 
 
 class AchievementInline(LinkedInline):
@@ -52,6 +54,7 @@ class AchievementInline(LinkedInline):
     verbose_name_plural = "Список награжений"
     extra = 0
     template = 'admin/worker/inline_without_add.html'
+    can_delete = False
 
 
 class ChildrenInline(LinkedInline):

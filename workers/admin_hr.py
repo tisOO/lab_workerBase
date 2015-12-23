@@ -3,8 +3,8 @@ from django.contrib.auth.forms import (UserCreationForm, UserChangeForm,
     AdminPasswordChangeForm)
 from django.utils.translation import ugettext_lazy as _
 # Register your models here.
-from .models import Worker, WorkerChild, JobPosition, WorkerLocation
-from honors.models import Salary, Prize, Achievement
+from .models import WorkerHRProxy, WorkerChild, JobPositionReadOnlyProxy, WorkerLocation
+from honors.models import SalaryReadOnlyProxy, PrizeReadOnlyProxy, AchievementReadOnlyProxy
 from education.models import WorkerHighEducation, WorkerSecondaryEducation
 
 from django.contrib.admin.options import InlineModelAdmin, TabularInline
@@ -21,32 +21,13 @@ class LinkedInline(InlineModelAdmin):
 
 
 class JobPositionsInline(LinkedInline):
-    model = JobPosition
+    template = 'admin/worker/inline_without_add.html'
+    model = JobPositionReadOnlyProxy
     verbose_name = "Должность"
     verbose_name_plural = 'Должности'
     extra = 0
     show_change_link = True
-
-
-class SalaryInline(LinkedInline):
-    model = Salary
-    verbose_name = "Зарплата"
-    verbose_name_plural = "Зарплаты за разные периоды времени"
-    extra = 0
-
-
-class PrizeInline(LinkedInline):
-    model = Prize
-    verbose_name = "Премия (последняя указанная премия является текущей)"
-    verbose_name_plural = "Премии за разные периоды времени"
-    extra = 0
-
-
-class AchievementInline(LinkedInline):
-    model = Achievement
-    verbose_name = "Награждение"
-    verbose_name_plural = "Список награжений"
-    extra = 0
+    can_delete = False
 
 
 class ChildrenInline(LinkedInline):
@@ -78,41 +59,26 @@ class HighEducationInline(LinkedInline):
     extra = 0
 
 
-class WorkerAdmin(admin.ModelAdmin):
+class WorkerHRProxyAdmin(admin.ModelAdmin):
 
     change_password_form = AdminPasswordChangeForm
-    list_per_page = 100
+    list_per_page = 10
 
     list_display = ('last_name', 'first_name', 'patronymic', 'age', 'get_sex', 'get_children_count',
                     'get_current_department',
-                    'get_current_job', 'get_current_white_salary', 'get_current_tax', 'salary_by_current_year'
+                    'get_current_job',
                     )
+    search_fields = ('last_name', 'first_name', 'patronymic')
     fieldsets = (
         (None, {'fields': ('get_avatar_as_html', 'avatar', 'username', 'password')}),
     (_('Personal info'), {'fields': (
         'last_name', 'first_name', 'patronymic', 'sex', 'birthday', 'birth_place', 'email', 'marital_status',
     )}),
-    (_('Permissions'), {'fields': ('is_active', 'is_staff', 'user_type')}),
-        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
-        (_('Groups'), {'fields': ('groups',)}),
     )
-
-    search_fields = ('last_name', 'first_name', 'patronymic')
 
     readonly_fields = ('get_avatar_as_html', )
 
     inlines = [
         ChildrenInline, JobPositionsInline, LocationInline,
-        SecondaryEducationInline, HighEducationInline, SalaryInline, PrizeInline, AchievementInline,
+        SecondaryEducationInline, HighEducationInline,
     ]
-
-admin.site.register(Worker, WorkerAdmin)
-admin.site.register(WorkerChild, admin.ModelAdmin)
-admin.site.register(JobPosition, admin.ModelAdmin)
-#
-from .admin_admin import WorkerAdminProxy, WorkerAdminProxyAdmin
-#
-admin.site.register(WorkerAdminProxy, WorkerAdminProxyAdmin)
-
-from .admin_hr import WorkerHRProxy, WorkerHRProxyAdmin
-admin.site.register(WorkerHRProxy, WorkerHRProxyAdmin)

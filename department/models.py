@@ -26,3 +26,20 @@ class DepartmentJobPosition(models.Model):
     class Meta:
         verbose_name = "Должность"
         verbose_name_plural = 'Должности'
+
+
+class DepartmentJobPositionReadonlyProxy(DepartmentJobPosition):
+
+    class Meta:
+        proxy = True
+        verbose_name = "Должность (только чтение)"
+        verbose_name_plural = 'Должности (только чтение)'
+
+
+class DepartmentReadOnlyProxy(Department):
+
+    class Meta:
+        proxy = True
+        verbose_name = "Отдел (только чтение)"
+        verbose_name_plural = 'Отделы (только чтение)'
+

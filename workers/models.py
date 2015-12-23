@@ -223,8 +223,15 @@ class Worker(AbstractUser):
 class WorkerAdminProxy(Worker):
     class Meta:
         proxy = True
-        verbose_name = "Работник"
-        verbose_name_plural = 'Работники'
+        verbose_name = "Работник (Администратор)"
+        verbose_name_plural = 'Работники (Администратор)'
+
+
+class WorkerHRProxy(Worker):
+    class Meta:
+        proxy = True
+        verbose_name = "Работник (Отдел кадров)"
+        verbose_name_plural = 'Работники (Отдел Кадров)'
 
 class WorkerLocation(models.Model):
 
@@ -277,5 +284,12 @@ class JobPosition(models.Model):
         return "%s %s" % (self.current_position, self.organization)
 
     class Meta:
+        verbose_name = "Место работы и должность"
+        verbose_name_plural = 'Место работы и должность'
+
+
+class JobPositionReadOnlyProxy(JobPosition):
+    class Meta:
+        proxy = True
         verbose_name = "Место работы и должность"
         verbose_name_plural = 'Место работы и должность'
