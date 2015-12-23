@@ -140,9 +140,10 @@ class Worker(AbstractUser):
         total_salary = 0
         for i in range(1, month+1):
             salary = self.salary_by_month_year(i, year)
-            salary += self.prize_by_month_year(i, year)
+            prize = self.prize_by_month_year(i, year)
+            salary += prize
             achievements = self.achievements_profit_by_month_year(i, year)
-            if achievements > 0:
+            if prize - achievements > 0:
                 salary += achievements
             salary *= 0.87
             total_salary += salary
@@ -184,7 +185,7 @@ class Worker(AbstractUser):
         achievements = self.achievements_by_month_year(month, year)
         sum = 0
         for achievement in achievements:
-            sum += achievements.allowance
+            sum += achievement.allowance
         return sum
 
     def get_current_black_salary(self):
@@ -201,17 +202,14 @@ class Worker(AbstractUser):
             prize = Prize.objects.filter(worker=self).order_by('-id')[0].prize
         except IndexError:
             prize = 0
-        # get achivments
+
         date = timezone.now()
         achievements = Achievement.objects.filter(
             worker=self, date__year=date.year, date__month=date.month
         )
 
         for ach in achievements:
-            if ach.achievement_type == "promo":
-                prize += ach.allowance
-            else:
-                prize -= ach.allowance
+            prize += ach.allowance
 
         if prize > 0:
             return prize
@@ -220,6 +218,13 @@ class Worker(AbstractUser):
     #
     # def year_salary(self):
     #     pass
+
+
+class WorkerAdminProxy(Worker):
+    class Meta:
+        proxy = True
+        verbose_name = "Работник"
+        verbose_name_plural = 'Работники'
 
 class WorkerLocation(models.Model):
 
@@ -236,6 +241,10 @@ class WorkerChild(models.Model):
     name = models.CharField(verbose_name="Имя ребенка", max_length=255)
     sex  = models.BooleanField(verbose_name="Пол", default=False)
     birthday = models.DateField(verbose_name="Дата рождения ребенка")
+
+    class Meta:
+        verbose_name = "Ребенок работника"
+        verbose_name_plural = 'Дети работников'
 
     def __str__(self):
         return '%s' % self.name
@@ -266,3 +275,7 @@ class JobPosition(models.Model):
         if self.position:
             return "%s %s" % (self.position, self.organization)
         return "%s %s" % (self.current_position, self.organization)
+
+    class Meta:
+        verbose_name = "Место работы и должность"
+        verbose_name_plural = 'Место работы и должность'

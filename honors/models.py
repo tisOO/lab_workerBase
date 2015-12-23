@@ -16,10 +16,16 @@ class Salary(models.Model):
     def __str__(self):
         return "Зарплата: %s рублей, начиная с %s" % (self.salary, self.destination_day)
 
+    class Meta:
+        verbose_name = "Зарплата"
+        verbose_name_plural = 'Зарплаты'
+
 
 class SalaryReadOnlyProxy(Salary):
     class Meta:
         proxy = True
+        verbose_name = "Зарплата"
+        verbose_name_plural = 'Зарплаты'
 
 
 class Prize(models.Model):
@@ -27,8 +33,9 @@ class Prize(models.Model):
     prize = models.PositiveSmallIntegerField(verbose_name="Процент премии")
     destination_day = models.DateField(verbose_name="Дата назначения премии")
 
-    # todo maybe add formula
     class Meta:
+        verbose_name = "Премия"
+        verbose_name_plural = 'Премии'
         ordering = ['-id']
 
     def __str__(self):
@@ -38,6 +45,8 @@ class Prize(models.Model):
 class PrizeReadOnlyProxy(Prize):
     class Meta:
         proxy = True
+        verbose_name = "Премия"
+        verbose_name_plural = 'Премии'
 
 
 ACHIEVEMENT_TYPE = (
@@ -53,7 +62,13 @@ class Achievement(models.Model):
     allowance = models.IntegerField(verbose_name="Надбавка (может быть отрицательной)")
     date = models.DateField(verbose_name="Дата награждения/взыскания")
 
+    class Meta:
+        verbose_name = "Награждение/взыскание"
+        verbose_name_plural = 'Награждения/взыскания'
+
 
 class AchievementReadOnlyProxy(Achievement):
     class Meta:
         proxy = True
+        verbose_name = "Награждение/взыскание"
+        verbose_name_plural = 'Награждения/взыскания'
