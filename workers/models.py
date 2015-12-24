@@ -247,6 +247,36 @@ class WorkerCEOProxy(Worker):
         verbose_name = "Работник (CEO)"
         verbose_name_plural = 'Работники (CEO)'
 
+
+class WorkerProfkomProxy(Worker):
+
+    def give_gift(self):
+        if self.get_children_count():
+            g_count = WorkerChildGift.objects.filter(child__worker=self, date__year=timezone.now().year).count()
+            if g_count == 0:
+                if timezone.now().month == 12:
+                    return "<a href='/gift/%s/'>Выдать подарки детям на НГ</a>" % self.id
+                else:
+                    return "До Нового Года еще рано, подарки не выдаем!"
+            else:
+                return "Подарки уже вручены:)"
+        return "У сотрудника нет детей, выдавать некому:)"
+
+    give_gift.allow_tags = True
+    give_gift.short_description = 'Выдача подарков на НГ'
+
+    def gifts_in_this_year(self):
+        return WorkerChildGift.objects.filter(child__worker=self, date__year=timezone.now().year).count()
+
+    gifts_in_this_year.allow_tags = True
+    gifts_in_this_year.short_description = 'Выдано сотруднику подарков'
+
+    class Meta:
+        proxy = True
+        verbose_name = "Работник (Профком)"
+        verbose_name_plural = 'Работники (Профком)'
+
+
 class WorkerLocation(models.Model):
 
     worker = models.ForeignKey(Worker)
@@ -287,7 +317,19 @@ class WorkerChild(models.Model):
     age.short_description = "Возраст"
 
 
+class WorkerChildGift(models.Model):
+
+    child = models.ForeignKey(WorkerChild)
+    date = models.DateField(auto_now_add=True)
+
+
 class WorkerChildProxy(WorkerChild):
+
+    def age(self):
+        return int((timezone.now().date() - self.birthday).total_seconds()/31536000.0)
+    age.allow_tags = True
+    age.short_description = "Возраст"
+
     class Meta:
         proxy = True
         verbose_name = "Ребенок работника (только чтение)"

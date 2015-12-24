@@ -3,9 +3,10 @@ from django.shortcuts import render, render_to_response, RequestContext
 from django.views.generic.base import View
 from django.http import Http404, HttpResponseRedirect
 
-from .models import Worker, WorkerChild, JobPosition, USER_TYPES
+from .models import Worker, WorkerChild, JobPosition, USER_TYPES, WorkerChildGift
 from web_navig.utils import Breadcrumb
-
+from django.utils import timezone
+from django.db.models import Q
 # Create your views here.
 
 
@@ -61,3 +62,17 @@ class ViewWorkersAdmin(View):
         context = self.get_context_data()
         return render_to_response(self.template_name, context, context_instance=RequestContext(request, processors=[]))
 
+def give_gift(request, worker):
+    childs = WorkerChild.objects.filter(
+        Q(worker__id=worker),
+        Q(Q(birthday__year__gt=timezone.now().year-14) |
+          Q(birthday__year=timezone.now().year-14, birthday__month__gt=timezone.now().month) |
+          Q(Q(birthday__year=timezone.now().year-14, birthday__month=timezone.now().month),
+            birthday__day__lte=31)
+          )
+    )
+    for child in childs:
+        c_gift = WorkerChildGift()
+        c_gift.child = child
+        c_gift.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

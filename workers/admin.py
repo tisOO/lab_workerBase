@@ -128,3 +128,7 @@ admin.site.register(WorkerAccountingProxy, WorkerAccountingProxyAdmin)
 from .admin_ceo import WorkerCEOProxyAdmin, WorkerCEOProxy
 
 admin.site.register(WorkerCEOProxy, WorkerCEOProxyAdmin)
+
+from .admin_profkom import WorkerProfkomProxy, WorkerProfkomProxyAdmin
+
+admin.site.register(WorkerProfkomProxy, WorkerProfkomProxyAdmin)
